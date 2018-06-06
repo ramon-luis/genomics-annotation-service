@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Annotations{% endblock %}
+{% block body %}
+  {% include "header.html" %}
+  <div class="container">
+    <div class="page-header">
+      <h1>My Annotations</h1>
+    </div>
+
+    <div class="row text-right">
+      <a href="{{ url_for('annotate') }}" title="Request New Annotation">
+        <button type="button" class="btn btn-link" aria-label="Request New Annotation">
+          <i class="fa fa-plus fa-lg"></i> Request New Annotation
+        </button>
+      </a>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        {% if annotations %}
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Request ID</th>
+                <th scope="col">Request Time</th>
+                <th scope="col">VCF File Name</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- https://stackoverflow.com/questions/45167508/flask-template-for-loop-iteration-keyvalue -->
+              {% for annotation in annotations %}
+                <tr>
+                  <!-- https://stackoverflow.com/questions/33108685/advanced-how-to-use-href-in-jinja2 -->
+                  <td><a href="{{ '/annotations/%s' %annotation['job_id'] }}"> {{ annotation['job_id'] }} </a></td>
+                  <!-- https://stackoverflow.com/questions/12400256/converting-epoch-time-into-the-datetime -->
+                  <td>{{ time.strftime('%Y-%m-%d %H:%M', time.localtime(annotation['submit_time'])) }} </td>
+                  <td>{{ annotation['input_file_name'] }}</td>
+                  <td>{{ annotation['job_status'] }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p>No annotations found.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div> <!-- container -->
+{% endblock %}

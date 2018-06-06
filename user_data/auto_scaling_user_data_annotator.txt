@@ -1,0 +1,8 @@
+#!/bin/bash -ex
+source /home/ubuntu/.virtualenvs/mpcs/bin/activate
+aws s3 cp s3://mpcs-students/ramonlrodriguez/gas_annotator.zip /home/ubuntu/
+unzip -o /home/ubuntu/gas_annotator.zip -d /home/ubuntu/
+chown -R ubuntu:ubuntu /home/ubuntu/anntools/*
+cd /home/ubuntu/anntools
+source /home/ubuntu/.virtualenvs/mpcs/bin/activate
+python /home/ubuntu/anntools/annotator.py console &

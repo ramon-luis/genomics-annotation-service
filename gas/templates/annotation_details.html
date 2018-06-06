@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Annotations{% endblock %}
+{% block body %}
+  {% include "header.html" %}
+  <div class="container">
+    <div class="page-header">
+      <h1>Annotation Details</h1>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <strong>Request ID: </strong> {{ annotation_details['job_id'] }}
+      </div>
+      <div class="col-md-12">
+        <strong>Request Time: </strong> {{ time.strftime('%Y-%m-%d %H:%M', time.localtime(annotation_details['submit_time'])) }}
+      </div>
+      <div class="col-md-12">
+        <strong>VCF Input file: </strong> <a href=" {{ input_file_presigned_download_url }} "> {{ annotation_details['input_file_name'] }} </a>
+      </div>
+      <div class="col-md-12">
+        <strong>Status: </strong> {{ annotation_details['job_status'] }}
+      </div>
+
+      <!-- Complete Time -->
+      {% if annotation_details['job_status'] == 'COMPLETE' %}
+        <div class="col-md-12">
+          <strong>Complete Time: </strong> {{ time.strftime('%Y-%m-%d %H:%M', time.localtime(annotation_details['complete_time'])) }}
+        </div>
+      {% endif %}
+    </div>
+    <br>
+
+    <!-- Results File and Log File -->
+    {% if annotation_details['job_status'] == 'COMPLETE' %}
+      <div class="row">
+        <div class="col-md-12">
+          <strong>Annotated Results File: </strong>
+
+          <!-- Free user and file not available in S3: ask user to upgrade -->
+          {% if (user_role == 'free_user') and (annotation_details['result_file_location'] != 'S3') %}
+            <a href="/subscribe">upgrade to Premium for download</a>
+
+          <!-- Premium user and file not available in S3: file coming soon -->
+          {% elif (user_role == 'premium_user') and (annotation_details['result_file_location'] != 'S3') %}
+            File is current being restored from archive...
+
+          <!-- File must be in S3 (for free or premium): download file -->
+          {% else %}
+            <a href=" {{ result_file_presigned_download_url }} ">download</a>
+
+          {% endif %}
+        </div>
+        <div class="col-md-12">
+          <strong>Annotation Log File: </strong><a href="/annotations/{{ annotation_details['job_id'] }}/log">view</a>
+        </div>
+      </div>
+      <br>
+    {% endif %}
+
+    <!-- Back to Annotations List -->
+    <div class="row mt-3">
+      <div class="col-md-12">
+        <a href="/annotations"><i class="fas fa-long-arrow-alt-left"></i> back to annotations list</a>
+      </div>
+    </div>
+
+  </div> <!-- container -->
+{% endblock %}

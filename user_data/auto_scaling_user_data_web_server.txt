@@ -1,0 +1,6 @@
+#!/bin/bash -ex
+source /home/ubuntu/.virtualenvs/mpcs/bin/activate
+aws s3 cp s3://mpcs-students/ramonlrodriguez/gas_web_server.zip /home/ubuntu/
+unzip /home/ubuntu/gas_web_server.zip -d /home/ubuntu/
+chown -R ubuntu:ubuntu /home/ubuntu/gas/*
+sudo -u ubuntu /home/ubuntu/gas/run_gas.sh console &
