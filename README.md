@@ -36,12 +36,12 @@ The application front-end is built with Python/Flask. The back-end is hosted on 
 
 **Front-end Implementation**
 * ec2 instances running a Flask web server host the user web interface
-* front-end instances are part of a load balancer that:
- 1. directs traffic accrodingly between available instances
- 2. scales-in/scales-out by adding/removing ec2 instances running the web server based on incoming traffic triggers
+* Front-end instances are part of a load balancer that:
+  * directs traffic accrodingly between available instances
+  * scales-in/scales-out by adding/removing ec2 instances running the web server based on incoming traffic triggers
 
 **Back-end Implementation**
-* Annotation job requests are run on separate ec2 instance(s) with message queues used to manage communication.
+* Annotation job requests are run on separate ec2 instances with message queues used to manage communication.
 * Annotation ec2 instances will scale-in/scale-out (i.e. add/remove instances) based on the number of pending jobs requested in the message queue.
 * Seperate utility ec2 instances exist to handle supplemental services:
   * a notification instance sends an email to users when an annotation job has completed
